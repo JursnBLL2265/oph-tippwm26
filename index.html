@@ -41,9 +41,8 @@ const supabase = createClient(supabaseUrl, supabaseKey)
       container.textContent = 'Lade Matches…'
       try {
         const { data, error } = await supabase
-          .from('matches')
-          .select('*')
-          .order('match_time', { ascending: true })
+  .from('matches')
+  .select('*')
 
         if (error) throw error
         if (!data?.length) {
