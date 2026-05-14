@@ -31,9 +31,11 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
     // TODO: hier echte Werte eintragen
-    const supabaseUrl = 'https://YOUR_PROJECT.supabase.co'
-    const supabaseKey = 'YOUR_PUBLISHABLE_KEY'
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabaseUrl = 'https://fttgctckipdlkweclkiq.supabase.co'
+
+const supabaseKey = 'DEIN_KOPIERTER_PUBLISHABLE_KEY'
+
+const supabase = createClient(supabaseUrl, supabaseKey)
 
     async function loadMatches(){
       const container = document.getElementById('matches')
