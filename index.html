@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OPH-TippWM26</title>
+  <style>
+    body{font-family:system-ui, sans-serif; margin:0; padding:24px; background:#0b1220; color:#e6edf3}
+    h1{margin-top:0}
+    .card{background:#111827; border:1px solid #1f2937; border-radius:12px; padding:16px; margin:12px 0}
+    .grid{display:grid; gap:12px}
+    .small{opacity:.8; font-size:.9rem}
+    button{background:#2563eb; border:none; color:white; padding:10px 14px; border-radius:10px; cursor:pointer}
+    button:disabled{opacity:.5; cursor:not-allowed}
+    input{padding:8px 10px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#e6edf3; min-width:220px}
+  </style>
+</head>
+<body>
+  <h1>⚽ OPH-TippWM26</h1>
+  <p class="small">
+    Erste Verbindung zu Supabase. Damit es wirklich funktioniert, musst du im Code unten <b>Supabase URL</b> und <b>Publishable Key</b>
+    eintragen (Project Settings → API → Publishable key).
+  </p>
+
+  <div class="card">
+    <h2>Matches (Test)</h2>
+    <div id="matches">Lade Matches…</div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    // TODO: hier echte Werte eintragen
+    const supabaseUrl = 'https://YOUR_PROJECT.supabase.co'
+    const supabaseKey = 'YOUR_PUBLISHABLE_KEY'
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    async function loadMatches(){
+      const container = document.getElementById('matches')
+      container.textContent = 'Lade Matches…'
+      try {
+        const { data, error } = await supabase
+          .from('matches')
+          .select('*')
+          .order('match_time', { ascending: true })
+
+        if (error) throw error
+        if (!data?.length) {
+          container.textContent = 'Keine Matches gefunden. Alles ok – nur noch keine Daten?'
+          return
+        }
+
+        container.innerHTML = ''
+        for (const m of data){
+          const card = document.createElement('div')
+          card.className = 'card'
+          card.innerHTML = `
+            <div><b>${m.team_a}</b> vs <b>${m.team_b}</b></div>
+            <div class="small">${new Date(m.match_time).toLocaleString('de-DE')}</div>
+            <div class="small">Final: ${m.goals_a ?? '-'} : ${m.goals_b ?? '-'}</div>
+          `
+          container.appendChild(card)
+        }
+      } catch (e){
+        container.textContent = 'Fehler beim Laden: ' + (e?.message || String(e))
+      }
+    }
+
+    loadMatches()
+  </script>
+</body>
+</html>
